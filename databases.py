@@ -22,13 +22,12 @@ The main dababases are:
 import os
 import atexit
 import json
+from abc import ABC, abstractclassmethod
 
 
-class BaseDatabase:
+class BaseDatabase(ABC):
     """ Basic and general database. The other databases that the bot uses
     are based on this object. """
-
-    DEFAULT_DB = list()
 
     def __init__(self, db_name: str):
         """ Loads the database with the given name. """
@@ -36,6 +35,11 @@ class BaseDatabase:
         self.name = db_name
         self._data = self.__load()
         atexit.register(self.save)  # Save databases when program exits
+
+    @property
+    @abstractclassmethod
+    def EMPTY_DB(cls,):  # pylint: disable=invalid-name
+        """ Abstract property. Returns the default (empty) database structure. """
 
     @property
     def filename(self,):
@@ -56,7 +60,7 @@ class BaseDatabase:
         if not os.path.isfile(self.path):
             # If database file does not exist, loads and returns default
             # database
-            return self.DEFAULT_DB
+            return self.EMPTY_DB
 
         # If database found: opens and returns it.
         with open(self.path, 'r') as file:
@@ -72,16 +76,26 @@ class BaseDatabase:
             json.dump(self._data, file)
 
 
-class StatsDatabase(BaseDatabase):
+class ListDatabase(BaseDatabase):
+
+    EMPTY_DB = list()
+
+
+class DictDatabase(BaseDatabase):
+
+    EMPTY_DB = dict()
+
+
+class StatsDatabase(DictDatabase):
     """ Saves general information (total races, players played, etc.) """
 
 
-class UsersDatabase(BaseDatabase):
+class UsersDatabase(DictDatabase):
     """ Saves information about individual users, and information about the last
     N races of the user. """
 
 
-class StringsDatabase(BaseDatabase):
+class StringsDatabase(ListDatabase):
     """ A base object that is used by the `SubmittedStringsDatabase` and the
     `ApprovedStringsDatabase`. """
 

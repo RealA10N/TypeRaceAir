@@ -46,7 +46,12 @@ class Player():
 
 
 class PlayerRaceResult():
-    def __init__(self, race: Race, player: Player, submit_timestamp: float, submit_sentence: str):
+    def __init__(self,
+                 race: Race,
+                 player: Player,
+                 submit_timestamp: float,
+                 submit_sentence: str
+                 ):
         self.race = race
         self.submit_sentence = submit_sentence
         self.player = player

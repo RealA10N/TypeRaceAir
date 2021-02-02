@@ -1,6 +1,6 @@
 # -- IMPORTS --#
 import typing
-import time
+import datetime
 
 
 class Race():
@@ -9,40 +9,27 @@ class Race():
         '''The race sentence'''
         self.sentece = sentece
         '''	The players that participate in the race.'''
-        self.players = players
-        self.start_timestamp = None
-
-    @property
-    def _players(self,):
-        '''A list of players that participate in the current race.'''
-        pass
-
-    @property
-    def _is_over(self,) -> bool:
-        '''checks if the race is over'''
-        pass
-
-    @property
-    def __start_timestamp(self) -> None:
-        ''' return the current timestamp from epoch '''
-        return time.time()
+        self._players = players
+        self.__start_timestamp = datetime.datetime.now().timestamp()
 
     def log_result(self, player: Player, user_string: str):
         '''Logs the result of the given player.'''
-        pass
-        # return PlayerRaceResult(X, self.player, self.__start_timestamp, self.user_string)
+        return PlayerRaceResult(race=self,
+                                player=player,
+                                submit_timestamp=datetime.datetime.now().timestamp(),
+                                submit_sentence=user_string)
 
 
 class Player():
-    @property
-    def name(self, name: str) -> name:
+
+    def __init__(self, name):
         self.name = name
 
-    def __eq__(self, other) -> bool:
-        pass
+    def __eq__(self, other):
+        return self.name == other
 
     def __ne__(self, other):
-        pass
+        return not self == other
 
 
 class PlayerRaceResult():
